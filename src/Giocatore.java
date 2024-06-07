@@ -12,6 +12,7 @@ public class Giocatore {
     String nome_ruolo;
     ArrayList<Carta> carte = new ArrayList<Carta>();
     GestionePartita partita;
+    Boolean bangUtilizzato = false;
 
     public Giocatore(ArrayList<String> nomi_giocatori, String nome_ruolo, GestionePartita partita) {
         // Prendi e rimuovi un nome RANDOM
@@ -26,6 +27,7 @@ public class Giocatore {
         
         this.nome_ruolo = nome_ruolo;
         this.partita = partita;
+        this.bangUtilizzato = false;
 
         if (nome_ruolo.equals("Sceriffo")){
             PuntiFerita = 5;
@@ -102,7 +104,7 @@ public class Giocatore {
     }
 
     public void resetTurno() {
-        
+        this.bangUtilizzato = false;
     }
 
     public ArrayList<Carta> getCarte(){
@@ -142,12 +144,17 @@ public class Giocatore {
         return 0;  
     }
 
+    public boolean isBangUtilizzato() {
+        return bangUtilizzato;
+    }
+
     public void equipaggia(Carta carta) {
         equipaggiata = carta;
     }
 
     public void bang(){
-        ArrayList<Giocatore> giocatori = this.partita.getGiocatoriADistanza(1, this);
+        this.bangUtilizzato = true;
+        ArrayList<Giocatore> giocatori = this.partita.getGiocatoriADistanza(getDistanza(), this);
         System.out.println();
         System.out.println("Scegli chi vuoi colpire: ");
         for (int i = 0; i < giocatori.size(); i++) {
@@ -181,10 +188,11 @@ public class Giocatore {
 
         // seleziona mancato 
         if (mancato){
-            String risposta = "";
             System.out.println("Vuoi usare il mancato?"); 
-            risposta = InputData.readString("Rispondi si o no: ", true);
-            if (risposta.equals("si")){
+            System.out.println("1: Si");
+            System.out.println("2: No");
+            Integer risposta = InputData.readIntegerWithMaximum("Rispondi: ", 2);
+            if (risposta == 1){
                 for (Carta carta : carte) {
                     if (carta.getNome().equals("Mancato")){
                         carte.remove(carta);
@@ -220,7 +228,7 @@ public class Giocatore {
         Integer dist = this.getDistanza();
     }
 
-    public void catBalou(){
+    public void catBalou(){  // TODO aggiungere scelta carta invece che random
         partita.catBalou(this);
     }
 
@@ -234,7 +242,7 @@ public class Giocatore {
     }
 
     public void rimuoviCarta(Carta carta) {
-        carte.remove(carta);
+        carte.remove(carta);    
     }
 
     public void scarta(Carta carta) {

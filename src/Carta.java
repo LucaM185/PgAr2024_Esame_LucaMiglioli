@@ -31,11 +31,18 @@ public class Carta {
     }
 
     public void usa(Giocatore giocatore){
-        System.out.println("Hai usato la carta: " + this.nome );
-        if (this.equipaggiabile){
+        if (this.equipaggiabile || this instanceof Arma){
+            System.out.println("Hai equipaggiato la carta: " + this.nome);
             giocatore.equipaggia(this);
+            giocatore.rimuoviCarta(this);
+            return;
         }
+        System.out.println("Hai usato la carta: " + this.nome );
         if (this.nome.equals("BANG!")){
+            if (giocatore.isBangUtilizzato()) {
+                System.out.println("Hai già usato un BANG in questo turno !!! ");
+                return;
+            }
             giocatore.bang();
         }
         if (this.nome.equals("Mancato")){

@@ -15,8 +15,4 @@ public class Arma extends Carta{
     public String toString() {
         return "Nome: " + this.nome + " Distanza: " + this.distanza + " Seme: " + this.seme + " Valore: " + this.valore;
     }
-
-    public void usa(Giocatore giocatore) {
-        giocatore.equipaggia(this);
-    }
 }

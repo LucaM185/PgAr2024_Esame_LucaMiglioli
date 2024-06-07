@@ -81,6 +81,7 @@ public class GestionePartita {
 
     public void gioca(){
         Giocatore giocatore = this.ruoli.get(posizione);
+        ControllaMorti();
         VisualizzaGiocatori();
         System.out.println("\n\nE' il turno di " + giocatore);
         System.out.println("Hai " + giocatore.getPF() + " punti ferita");
@@ -120,6 +121,15 @@ public class GestionePartita {
             }
         }
         return giocatori;
+    }
+
+    public void ControllaMorti() {
+        for (Giocatore ruolo : this.ruoli) {
+            if (ruolo.getPF() <= 0) {
+                System.out.println("Il giocatore " + ruolo.getNome() + " è morto");
+                this.ruoli.remove(ruolo);
+            }
+        }
     }
     
     public void saloon() {
