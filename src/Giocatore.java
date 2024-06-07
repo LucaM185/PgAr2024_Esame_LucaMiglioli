@@ -17,6 +17,7 @@ public class Giocatore {
     GestionePartita partita;
     Boolean bangUtilizzato = false;
     String personaggio;
+    Integer PFMax = 0;
 
     public Giocatore(ArrayList<String> nomi_giocatori, String nome_ruolo, String personaggio, GestionePartita partita) {
         this.personaggio = personaggio;
@@ -42,13 +43,13 @@ public class Giocatore {
         if (nome_ruolo.equals("Sceriffo")){
             PuntiFerita++;
         }
-
+        this.PFMax = PuntiFerita;
     }
 
     public String getPersonaggio(){
         return this.personaggio;
     }
-    
+
     public Carta getEquipaggiata(){
         return equipaggiata;
     }
@@ -170,6 +171,9 @@ public class Giocatore {
         }
         scelta--;
         carte.get(scelta).usa(this); 
+        if (carte.size() == 0){
+            pesca();
+        }
         return 0;  
     }
 

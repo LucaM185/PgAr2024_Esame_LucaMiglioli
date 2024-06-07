@@ -18,6 +18,10 @@ public class Main {
         while (true) {
             cls();
             partita.gioca();
+            if (partita.getRuoli().size() == 1){
+                System.out.println("Il vincitore è: " + partita.getRuoli().get(0).getNome() + " con il ruolo di " + partita.getRuoli().get(0).getRuolo() + "!");
+                break;
+            }
         }
 
         

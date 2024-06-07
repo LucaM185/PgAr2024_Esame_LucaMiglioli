@@ -83,6 +83,7 @@ public class XMLParser {
                     else if (localname.equals("carta")) {
                         // check equipaggiabile <carta equipaggiabile="false">
                         Boolean equipaggiabile = xmlr.getAttributeValue(null, "equipaggiabile").equals("true");
+                        System.out.println("Equipaggiabile: " + equipaggiabile);
                         String nome = "";
 
                         while (xmlr.hasNext()) {

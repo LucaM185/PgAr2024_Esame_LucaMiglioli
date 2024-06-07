@@ -77,6 +77,10 @@ public class GestionePartita {
         return -1;
     }
 
+    public ArrayList<Giocatore> getRuoli(){
+        return this.ruoli;
+    }
+
     public void VisualizzaGiocatori() {
         System.out.println("I giocatori sono: ");
         for (Giocatore ruolo : this.ruoli) {
@@ -106,6 +110,17 @@ public class GestionePartita {
 
         
         while (giocatore.gioca() != -1)
+        if (giocatore.getPersonaggio().equals("Sid Ketchum")) {
+            System.out.println("Hai Sid Ketchum, vuoi scartare 2 carte per recuperare un punto ferita?");
+            System.out.println("1. Si");
+            System.out.println("2. No");
+            Integer scelta = InputData.readIntegerWithMaximum("Scelta: ", 2);
+            if (scelta == 1) {
+                giocatore.scegliCartaDaScartare();
+                giocatore.scegliCartaDaScartare();
+                giocatore.incrementaPF();
+            }
+        }
         while (giocatore.getCarte().size() > giocatore.getPF()) {
             System.out.println("\nHai troppe carte, scartane una");
             giocatore.scegliCartaDaScartare();
@@ -128,14 +143,19 @@ public class GestionePartita {
                     mustangs++; 
                 if (this.ruoli.get(idx).getPersonaggio().equals("Paul Regret"))
                     mustangs++;
-                if (distanza >= Math.abs(idx - posizione_giocatore)+1) {
-                    giocatori.add(this.ruoli.get(idx));
+                if (distanza >= Math.abs(idx - posizione_giocatore)+mustangs) {
+                    if (!giocatori.contains(this.ruoli.get(idx))){
+                        giocatori.add(this.ruoli.get(idx));
+                    }
                 } else {
-                    giocatori.add(this.ruoli.get(idx));
-                    
+                    if (!giocatori.contains(this.ruoli.get(idx))){
+                        giocatori.add(this.ruoli.get(idx));          
+                    }      
                 }
             }
         }
+        
+
         return giocatori;
     }
 
