@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "src/lib/kibofplib-1.0.jar"
+    ]
+}
