@@ -2,6 +2,7 @@ package src;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import it.kibo.fp.lib.InputData;
 
@@ -9,8 +10,13 @@ public class GestionePartita {
     private ArrayList<Giocatore> ruoli;
     Integer posizione = 0;
     private Mazzo mazzo;
+    private HashMap<String, String> personaggi_descrizioni = new HashMap<String, String>();
+    private ArrayList<String> nomi;
 
-    public GestionePartita(Integer n_giocatori, Mazzo mazzo) {
+    public GestionePartita(Integer n_giocatori, Mazzo mazzo, HashMap<String, String> personaggi_descrizioni) {  
+        this.personaggi_descrizioni = personaggi_descrizioni;
+        this.nomi = new ArrayList<String>(this.personaggi_descrizioni.keySet());
+
         // Creo il mazzo
         this.mazzo = mazzo;
 
@@ -23,23 +29,23 @@ public class GestionePartita {
 
         // Assegno i ruoli
         this.ruoli = new ArrayList<Giocatore>();
-        this.ruoli.add(new Giocatore(nomi_giocatori, "Sceriffo", this));
-        this.ruoli.add(new Giocatore(nomi_giocatori, "Rinnegato", this));
-        this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", this));
-        this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", this));
+        this.ruoli.add(new Giocatore(nomi_giocatori, "Sceriffo", getNomePers(), this));
+        this.ruoli.add(new Giocatore(nomi_giocatori, "Rinnegato", getNomePers(), this));
+        this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", getNomePers(), this));
+        this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", getNomePers(), this));
         
         switch (n_giocatori) {
             case 5:
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", getNomePers(), this));
                 break;
             case 6:
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", this));
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", getNomePers(), this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", getNomePers(), this));
                 break;
             case 7:
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", this));
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", this));
-                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", getNomePers(), this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Fuorilegge", getNomePers(), this));
+                this.ruoli.add(new Giocatore(nomi_giocatori, "Vice", getNomePers(), this));
                 break;
         }
 
@@ -53,6 +59,13 @@ public class GestionePartita {
             }
         }
         this.ruoli = ruoli_ordinati;
+    }
+    
+    public String getNomePers() {
+        Integer random_num = (int) (Math.random() * nomi.size());
+        String nome_personaggio = nomi.get(random_num);
+        nomi.remove(nome_personaggio);
+        return nome_personaggio;
     }
 
     public int getIndexSceriffo() {
@@ -74,8 +87,8 @@ public class GestionePartita {
     public void distribuisci2() {
         // Assegna carte
         for (Giocatore ruolo : this.ruoli) {
-            ruolo.pesca(mazzo);
-            ruolo.pesca(mazzo);
+            ruolo.pesca();
+            ruolo.pesca();
         }
     }
 
@@ -88,8 +101,8 @@ public class GestionePartita {
 ;
         giocatore.resetTurno();
         
-        giocatore.pesca(mazzo);
-        giocatore.pesca(mazzo);
+        giocatore.pesca();
+        giocatore.pesca();
 
         
         while (giocatore.gioca() != -1)
@@ -110,10 +123,13 @@ public class GestionePartita {
             idx = (idx + this.ruoli.size()) % this.ruoli.size();
             if (idx != posizione_giocatore) {    
                 // Controlla che non ci siano Mustang
-                if (this.ruoli.get(idx).getEquipaggiata().getNome().equals("Mustang")) {
-                    if (distanza >= Math.abs(idx - posizione_giocatore)+1) {
-                        giocatori.add(this.ruoli.get(idx));
-                    }
+                Integer mustangs = 0;
+                if (this.ruoli.get(idx).getEquipaggiata().getNome().equals("Mustang"))
+                    mustangs++; 
+                if (this.ruoli.get(idx).getPersonaggio().equals("Paul Regret"))
+                    mustangs++;
+                if (distanza >= Math.abs(idx - posizione_giocatore)+1) {
+                    giocatori.add(this.ruoli.get(idx));
                 } else {
                     giocatori.add(this.ruoli.get(idx));
                     
@@ -169,7 +185,7 @@ public class GestionePartita {
         }
 
         for (Giocatore giocatore : giocatorieccettoplayer) {
-            giocatore.bang();      
+            giocatore.bang(player);      
         }
 
     }

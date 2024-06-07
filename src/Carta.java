@@ -43,7 +43,7 @@ public class Carta {
                 System.out.println("Hai già usato un BANG in questo turno !!! ");
                 return;
             }
-            giocatore.bang();
+            giocatore.bang(giocatore);
         }
         if (this.nome.equals("Mancato")){
             System.out.println("Non puoi usare il mancato in questo momento");

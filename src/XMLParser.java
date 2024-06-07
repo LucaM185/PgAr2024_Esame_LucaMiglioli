@@ -2,13 +2,14 @@ package src;
 import javax.xml.stream.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class XMLParser {
     public XMLParser() {
     
     }
 
-    public void leggi(String file, Mazzo mazzo) {
+    public void leggi(String file, Mazzo mazzo, HashMap<String, String> personaggi_descritioni) {
         ArrayList<String> nomiruoli = new ArrayList<String>();
         ArrayList<Carta> carte = new ArrayList<Carta>();
 
@@ -61,6 +62,23 @@ public class XMLParser {
                             }
                             xmlr.next();
                         }
+                    }
+                    else if (localname.equals("personaggio")){
+                        // get attribute pf 
+                        Integer pf = Integer.parseInt(xmlr.getAttributeValue(null, "pf"));
+                        String nome = "";
+                        String descrizione = "";
+                        // Get nome and descrizione one after the other easy
+                        xmlr.next();
+                        xmlr.next();
+                        xmlr.next();
+                        nome = xmlr.getText();
+                        xmlr.next();
+                        xmlr.next();
+                        xmlr.next();
+                        xmlr.next();
+                        descrizione = xmlr.getText();
+                        personaggi_descritioni.put(nome, descrizione);
                     }
                     else if (localname.equals("carta")) {
                         // check equipaggiabile <carta equipaggiabile="false">

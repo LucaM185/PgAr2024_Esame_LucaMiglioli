@@ -1,6 +1,9 @@
 package src;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.xml.catalog.Catalog;
+
 import it.kibo.fp.lib.InputData;
 
 
@@ -13,8 +16,11 @@ public class Giocatore {
     ArrayList<Carta> carte = new ArrayList<Carta>();
     GestionePartita partita;
     Boolean bangUtilizzato = false;
+    String personaggio;
 
-    public Giocatore(ArrayList<String> nomi_giocatori, String nome_ruolo, GestionePartita partita) {
+    public Giocatore(ArrayList<String> nomi_giocatori, String nome_ruolo, String personaggio, GestionePartita partita) {
+        this.personaggio = personaggio;
+        
         // Prendi e rimuovi un nome RANDOM
         Random rand = new Random();
         Integer index = rand.nextInt(nomi_giocatori.size());
@@ -29,12 +35,20 @@ public class Giocatore {
         this.partita = partita;
         this.bangUtilizzato = false;
 
+        if (personaggio.equals("El Gringo") || personaggio.equals("Paul Regret")){
+            PuntiFerita = 3;
+        }
+
         if (nome_ruolo.equals("Sceriffo")){
-            PuntiFerita = 5;
+            PuntiFerita++;
         }
 
     }
 
+    public String getPersonaggio(){
+        return this.personaggio;
+    }
+    
     public Carta getEquipaggiata(){
         return equipaggiata;
     }
@@ -42,6 +56,9 @@ public class Giocatore {
     public Integer getDistanza(){  
         // If equipaggiata has distanza, return it
         Integer dist = 1;
+        if (personaggio.equals("Rose Doolan")){
+            dist++;
+        }
         if (equipaggiata.getDistanza() != null){
             dist = equipaggiata.getDistanza();
         }
@@ -78,7 +95,8 @@ public class Giocatore {
         }
     }
 
-    public void pesca(Mazzo mazzo) {
+    public void pesca() {
+        Mazzo mazzo = partita.getMazzo();
         Carta pescata = mazzo.pesca();
         Boolean giapresente = false;
         for (Carta carta : carte) {
@@ -91,17 +109,28 @@ public class Giocatore {
         }
         else {
             mazzo.scarta(pescata);
-            this.pesca(mazzo);
+            this.pesca();
         }
     }
+
 
     public String getRuolo() {
         return nome_ruolo;
     }
 
-    public void decrementaPF() {
+    public void decrementaPF(Giocatore attaccante) {
+        if (this.personaggio.equals("Bart Cassidy") && PuntiFerita > 0){
+            this.pesca();
+        }
+        if (this.personaggio.equals("El Gringo")){
+            if (attaccante.getCarte().size() != 0){
+                carte.add(attaccante.getRandomCarta());
+            }
+        }
+
         PuntiFerita--;
     }
+
 
     public void resetTurno() {
         this.bangUtilizzato = false;
@@ -152,7 +181,7 @@ public class Giocatore {
         equipaggiata = carta;
     }
 
-    public void bang(){
+    public void bang(Giocatore attaccante){
         this.bangUtilizzato = true;
         ArrayList<Giocatore> giocatori = this.partita.getGiocatoriADistanza(getDistanza(), this);
         System.out.println();
@@ -161,12 +190,19 @@ public class Giocatore {
             System.out.println((i+1) + ": " + giocatori.get(i));
         }
         Integer scelta = InputData.readIntegerWithMaximum("Chi vuoi colpire? ", giocatori.size());
-        giocatori.get(scelta-1).chiediMancato();
+        giocatori.get(scelta-1).chiediMancato(attaccante);
         
     }
 
-    public void chiediMancato() {
+    public void chiediMancato(Giocatore attaccante) {
         if (this.getEquipaggiata().getNome().equals("Barile")){
+            Carta pescata = this.partita.getMazzo().pesca();
+            if (pescata.getSeme().equals("CUORI")){
+                System.out.println("Hai pescato " + pescata + " di " + pescata.getSeme() + "quindi il barile ti ha salvato!! ");
+                return;
+            }
+        }
+        if (this.personaggio.equals("Jourdonnais")){
             Carta pescata = this.partita.getMazzo().pesca();
             if (pescata.getSeme().equals("CUORI")){
                 System.out.println("Hai pescato " + pescata + " di " + pescata.getSeme() + "quindi il barile ti ha salvato!! ");
@@ -183,7 +219,7 @@ public class Giocatore {
         }
 
         if (!mancato){
-            this.decrementaPF();
+            this.decrementaPF(attaccante);
         }
 
         // seleziona mancato 
@@ -200,7 +236,7 @@ public class Giocatore {
                     }
                 }
             }else{
-                this.decrementaPF();
+                this.decrementaPF(attaccante);
             }
         }
     }
@@ -214,14 +250,14 @@ public class Giocatore {
     }
 
     public void diligenza() {
-        this.pesca(partita.getMazzo());
-        this.pesca(partita.getMazzo());
+        this.pesca();
+        this.pesca();
     }
 
     public void wellsFargo() {
-        this.pesca(partita.getMazzo());
-        this.pesca(partita.getMazzo());
-        this.pesca(partita.getMazzo());
+        this.pesca();
+        this.pesca();
+        this.pesca();
     }
 
     public void panico(){
@@ -248,6 +284,13 @@ public class Giocatore {
     public void scarta(Carta carta) {
         this.partita.getMazzo().scarta(carta);
         carte.remove(carta);
+    }
+
+    public Carta getRandomCarta() {
+        int index = (int) (Math.random() * carte.size());
+        Carta carta = carte.get(index);
+        carte.remove(carta);
+        return carta;
     }
 }
 
