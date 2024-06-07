@@ -17,6 +17,10 @@ public class Mazzo {
 
     public Carta pesca() {
         // random index from 0 to carte.size()
+        if (this.carte.size() == 0) {
+            this.carte = this.scarti;
+            this.scarti = new ArrayList<Carta>();
+        }
         int index = (int) (Math.random() * this.carte.size());
         Carta carta = this.carte.get(index);
         this.carte.remove(carta);
@@ -39,5 +43,10 @@ public class Mazzo {
         this.scarti.add(carta);
     }
 
+    public void printcarte() {
+        for (Carta carta : this.carte) {
+            System.out.println(carta.getNome());
+        }
+    }
 
 }

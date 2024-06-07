@@ -99,19 +99,7 @@ public class Giocatore {
     public void pesca() {
         Mazzo mazzo = partita.getMazzo();
         Carta pescata = mazzo.pesca();
-        Boolean giapresente = false;
-        for (Carta carta : carte) {
-            if (carta.getNome().equals(pescata.getNome())){
-                giapresente = true;
-            }
-        }
-        if (!giapresente){
-            carte.add(pescata);
-        }
-        else {
-            mazzo.scarta(pescata);
-            this.pesca();
-        }
+        carte.add(pescata);
     }
 
 

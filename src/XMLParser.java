@@ -87,6 +87,8 @@ public class XMLParser {
                         String nome = "";
 
                         while (xmlr.hasNext()) {
+                        
+                            
                             if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT && xmlr.getLocalName().equals("carta")) {
                                 break;
                             }

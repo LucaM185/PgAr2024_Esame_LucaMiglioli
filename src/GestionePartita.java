@@ -88,11 +88,12 @@ public class GestionePartita {
         }
     }
 
-    public void distribuisci2() {
+    public void distribuisci() {
         // Assegna carte
         for (Giocatore ruolo : this.ruoli) {
-            ruolo.pesca();
-            ruolo.pesca();
+            for (int i = 0; i < ruolo.PFMax; i++) {
+                ruolo.pesca();
+            }
         }
     }
 
