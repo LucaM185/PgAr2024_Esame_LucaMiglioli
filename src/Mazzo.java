@@ -19,6 +19,7 @@ public class Mazzo {
         // random index from 0 to carte.size()
         int index = (int) (Math.random() * this.carte.size());
         Carta carta = this.carte.get(index);
+        this.carte.remove(carta);
         return carta;
     }
 
@@ -32,6 +33,10 @@ public class Mazzo {
     
     public String printlen() {
         return "Il mazzo contiene: " + carte.size() + " carte";
+    }
+
+    public void scarta(Carta carta) {
+        this.scarti.add(carta);
     }
 
 

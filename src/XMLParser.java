@@ -54,8 +54,7 @@ public class XMLParser {
                                 else if (xmlr.getLocalName().equals("seme")) {
                                     xmlr.next();
                                     String seme = xmlr.getText();
-                                    Equipaggiabile arma = new Equipaggiabile(nome, distanza);
-                                    arma.setSemeValore(seme, valore);
+                                    Arma arma = new Arma(nome, distanza, seme, valore);
                                     carte.add(arma);
                                 }
 
@@ -95,7 +94,7 @@ public class XMLParser {
                                             else if (xmlr.getLocalName().equals("seme")) {
                                                 xmlr.next();
                                                 String seme = xmlr.getText();
-                                                Carta carta = new Carta(nome, descrizione, equipaggiabile, seme, valore);
+                                                Carta carta = new Carta(nome, descrizione, equipaggiabile, seme, valore, 1);
                                                 carte.add(carta);
                                             }
                                         }

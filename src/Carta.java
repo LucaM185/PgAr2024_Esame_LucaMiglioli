@@ -6,33 +6,42 @@ public class Carta {
     private Boolean equipaggiabile;
     private String seme;
     private String valore;
+    private Integer distanza;
     
 
-    public Carta(String nome, String descrizione, Boolean equipaggiabile, String seme, String valore) {
+    public Carta(String nome, String descrizione, Boolean equipaggiabile, String seme, String valore, Integer distanza) {
         this.nome = nome;
         this.descrizione = descrizione;
         this.equipaggiabile = equipaggiabile;
         this.seme = seme;
         this.valore = valore;
+        this.distanza = distanza;
     }
 
-
+    public Integer getDistanza(){
+        return this.distanza;
+    }
 
     public String getNome(){
         return this.nome;
     }
 
+    public String getSeme(){
+        return this.seme;
+    }
+
     public void usa(Giocatore giocatore){
-        System.out.println("Hau usato la carta: " + this.nome );
+        System.out.println("Hai usato la carta: " + this.nome );
         if (this.equipaggiabile){
             giocatore.equipaggia(this);
         }
         if (this.nome.equals("BANG!")){
             giocatore.bang();
         }
-        // if (this.nome.equals("Mancato")){
-        //     giocatore.mancato();
-        // }
+        if (this.nome.equals("Mancato")){
+            System.out.println("Non puoi usare il mancato in questo momento");
+            return;
+        }
         if (this.nome.equals("Birra")){
             giocatore.birra();
         }
@@ -55,7 +64,7 @@ public class Carta {
             giocatore.gatling();
         }
         
-
+        giocatore.scarta(this);
     }
 
     public String toString(){

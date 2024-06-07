@@ -19,6 +19,7 @@ public class GestionePartita {
         for (int i = 0; i < n_giocatori; i++) {
             nomi_giocatori.add(InputData.readString("Inserisci il tuo nome: ", true));
         }
+        ArrayList<String> nomi_giocatori_copia = new ArrayList<String>(nomi_giocatori);
 
         // Assegno i ruoli
         this.ruoli = new ArrayList<Giocatore>();
@@ -42,7 +43,16 @@ public class GestionePartita {
                 break;
         }
 
-        
+        // Riordina secondo nomi_giocatori_copia
+        ArrayList<Giocatore> ruoli_ordinati = new ArrayList<Giocatore>();
+        for (String nome : nomi_giocatori_copia) {
+            for (Giocatore ruolo : this.ruoli) {
+                if (ruolo.getNome().equals(nome)) {
+                    ruoli_ordinati.add(ruolo);
+                }
+            }
+        }
+        this.ruoli = ruoli_ordinati;
     }
 
     public int getIndexSceriffo() {
@@ -55,22 +65,38 @@ public class GestionePartita {
     }
 
     public void VisualizzaGiocatori() {
-        System.out.print ("I giocatori sono: ");
+        System.out.println("I giocatori sono: ");
         for (Giocatore ruolo : this.ruoli) {
-            System.out.print("" + ruolo + " ");
+            System.out.println("" + ruolo + " ");
+        }
+    }
+
+    public void distribuisci2() {
+        // Assegna carte
+        for (Giocatore ruolo : this.ruoli) {
+            ruolo.pesca(mazzo);
+            ruolo.pesca(mazzo);
         }
     }
 
     public void gioca(){
         Giocatore giocatore = this.ruoli.get(posizione);
+        VisualizzaGiocatori();
         System.out.println("\n\nE' il turno di " + giocatore);
         System.out.println("Hai " + giocatore.getPF() + " punti ferita");
+;
         giocatore.resetTurno();
         
         giocatore.pesca(mazzo);
         giocatore.pesca(mazzo);
 
-        giocatore.gioca();
+        
+        while (giocatore.gioca() != -1)
+        while (giocatore.getCarte().size() > giocatore.getPF()) {
+            System.out.println("\nHai troppe carte, scartane una");
+            giocatore.scegliCartaDaScartare();
+        }
+
 
         posizione = (posizione - 1 + this.ruoli.size()) % this.ruoli.size();
     }
@@ -78,9 +104,19 @@ public class GestionePartita {
     public ArrayList<Giocatore> getGiocatoriADistanza(Integer distanza, Giocatore giocatore) {
         ArrayList<Giocatore> giocatori = new ArrayList<Giocatore>();
         Integer posizione_giocatore = this.ruoli.indexOf(giocatore);
-        for (Giocatore ruolo : this.ruoli) {
-            if (Math.abs(this.ruoli.indexOf(ruolo) - posizione_giocatore) == distanza) {
-                giocatori.add(ruolo);
+        for (int i = posizione_giocatore-distanza; i <= posizione_giocatore+distanza; i++) {
+            Integer idx = i;
+            idx = (idx + this.ruoli.size()) % this.ruoli.size();
+            if (idx != posizione_giocatore) {    
+                // Controlla che non ci siano Mustang
+                if (this.ruoli.get(idx).getEquipaggiata().getNome().equals("Mustang")) {
+                    if (distanza >= Math.abs(idx - posizione_giocatore)+1) {
+                        giocatori.add(this.ruoli.get(idx));
+                    }
+                } else {
+                    giocatori.add(this.ruoli.get(idx));
+                    
+                }
             }
         }
         return giocatori;

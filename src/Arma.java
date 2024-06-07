@@ -1,23 +1,22 @@
 package src;
 
-public class Equipaggiabile extends Carta{
+public class Arma extends Carta{
     private String nome;
     private Integer distanza;
     private String seme;
     private String valore;
 
-    public Equipaggiabile(String nome, Integer distanza) {
-        super(nome, "", false, "", "");
+    public Arma(String nome, Integer distanza, String seme, String valore) {
+        super(nome, "", false, seme, valore, distanza);
         this.nome = nome;
         this.distanza = distanza;
     }
 
-    public void setSemeValore(String seme, String valore) {
-        this.seme = seme;
-        this.valore = valore;
-    }
-
     public String toString() {
         return "Nome: " + this.nome + " Distanza: " + this.distanza + " Seme: " + this.seme + " Valore: " + this.valore;
+    }
+
+    public void usa(Giocatore giocatore) {
+        giocatore.equipaggia(this);
     }
 }
