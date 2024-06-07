@@ -13,6 +13,7 @@ public class Main {
         XMLParser parser = new XMLParser();
         HashMap<String, String> personaggi_descrizioni = new HashMap<String, String>();
         parser.leggi("src/assets/listaCarte.xml", mazzo, personaggi_descrizioni);
+        
 
         GestionePartita partita = new GestionePartita(n_giocatori, mazzo, personaggi_descrizioni);
         

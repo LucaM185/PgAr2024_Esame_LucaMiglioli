@@ -85,12 +85,9 @@ public class XMLParser {
                         Boolean equipaggiabile = xmlr.getAttributeValue(null, "equipaggiabile").equals("true");
                         String nome = "";
 
-                        while (xmlr.hasNext()) {
+                        Boolean getout = false;
+                        while (xmlr.hasNext() || xmlr.getEventType() != XMLStreamConstants.END_ELEMENT || xmlr.getLocalName().equals("carta")) {
                         
-                            
-                            if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT && xmlr.getLocalName().equals("carta")) {
-                                break;
-                            }
                             if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
                                 if (xmlr.getLocalName().equals("nome")) {
                                     xmlr.next();
@@ -104,6 +101,7 @@ public class XMLParser {
                                     String valore = "";
                                     while (xmlr.hasNext()) {
                                         if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT && xmlr.getLocalName().equals("carta")) {
+                                            getout = true;
                                             break;
                                         }
                                         if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -119,7 +117,11 @@ public class XMLParser {
                                             }
                                         }
                                         xmlr.next();
-                                    }                                    
+                                    }   
+                                    if (getout) {
+                                        break;
+                                    }
+                                             
                                 }
                             }
                             xmlr.next();
